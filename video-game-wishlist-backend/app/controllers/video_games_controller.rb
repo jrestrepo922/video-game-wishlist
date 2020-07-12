@@ -1,15 +1,16 @@
 class VideoGamesController < ApplicationController
-  before_action :set_video_game, only: [:show, :update, :destroy]
+  before_action :get_genre, only: [:index, :show, :new, :create, :edit, :update, :destroy]
 
-  # GET /video_games
+  
   def index
-    @video_games = VideoGame.all
+    @video_games = @genre.video_games
 
     render json: @video_games
   end
 
-  # GET /video_games/1
-  def show
+
+  def show 
+    @video_game = @genre.video_games.find(params[:id])
     render json: @video_game
   end
 
@@ -40,9 +41,13 @@ class VideoGamesController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_video_game
-      @video_game = VideoGame.find(params[:id])
-    end
+    # def set_video_game
+    #   @video_game = VideoGame.find(params[:id])
+    # end
+
+    def get_genre
+      @genre = Genre.find(params[:genre_id])
+    end 
 
     # Only allow a trusted parameter "white list" through.
     def video_game_params
