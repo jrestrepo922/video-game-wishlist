@@ -50,3 +50,61 @@
   .grid-container-genres-index div a {
       text-decoration: none;
   }
+
+ /*----------- Video Game Index----------*/
+
+ * {
+  box-sizing: border-box;
+}
+
+
+/* Float four columns side by side */
+.videoGameColumn {
+  float: left;
+  width: 33.3%;
+  padding: 10px 10px;
+}
+
+/* Remove extra left and right margins, due to padding */
+#videoGamesIndex {
+  margin: 0 -5px;
+}
+
+/* Clear floats after the columns */
+#videoGamesIndex:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive columns */
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+  }
+}
+
+/* Style the counter cards */
+.videoGameCard {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  text-align: center;
+  background-color: #f1f1f1;
+}
+
+/* new video Game link */
+#newVideoGameLink {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 190px;
+}
+
+#newVideoGameLink a{
+  text-decoration: none;
+  font-size: 18px;
+}
+
+

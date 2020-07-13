@@ -9,10 +9,48 @@
 <div id="home"></div>
 <div id="genresIndex"></div>
 <div id="videoGamesIndex"></div>
-
+<div id="videoGameForm"></div>
 
 
 <script src="index.js"></script>
 <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
 
+
+
+
+
+
+
+<h2>Create New Game</h2>
+<p>Please fill in this form to create a new game for the store</p>
+
+<form>
+    <div class="videoGameFormContainer">
+        <label for="title">Title</label> <br>
+        <input type="text" name="title" id="title"><br>
+
+        <label for="new">New Price</label> <br>
+        <input type="text" name="new" id="new"><br>
+
+        <label for="preOwned">Pre Owned Price</label> <br>
+        <input type="text" name="preOwned" id="preOwned"><br>
+
+        <label for="stars">Stars</label> <br>
+        <input type="text" name="stars" id="stars"><br>
+
+        <label for="image">Image </label> <br>
+        <input type="text" name="image" id="image"><br>
+
+        <label for="companyName">Company Name</label> <br>
+        <input type="text" name="companyName" id="companyName"><br>
+        
+        <label for="title">Rated</label> <br>
+        <input type="radio" name="title" id="title"><br>
+
+        <input type="hidden" id="formGenreId" value="${genreId}">
+
+        
+        <input type="submit" >
+    </div>
+</form>
 
