@@ -1,0 +1,52 @@
+/*------- Navigation CSS -------------*/ 
+.nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+  }
+  
+.nav li {
+    float: left;
+  }
+  
+.nav li a {
+    font-size: 20px;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+  
+.nav  li a:hover {
+    background-color:#4CAF50;
+  }
+
+  /*----------- Genres Index----------*/
+  .grid-container-genres-index {
+    display: grid;
+    height: 400px;
+    align-content: center;
+    grid-template-columns: auto auto auto;
+    grid-gap: 10px;
+    background-color: #bec3c7;
+    padding: 10px;
+  }
+  
+  .grid-container-genres-index > div {
+    background-color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    padding: 20px 0;
+    font-size: 30px;
+  }
+
+  #genresIndexH1 {
+    text-align: center;
+    
+  }
+
+  .grid-container-genres-index div a {
+      text-decoration: none;
+  }

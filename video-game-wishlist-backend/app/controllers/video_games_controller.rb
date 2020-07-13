@@ -16,7 +16,8 @@ class VideoGamesController < ApplicationController
 
   # POST /video_games
   def create
-    @video_game = VideoGame.new(video_game_params)
+    
+    @video_games = @genre.video_games.build(video_game_params)
 
     if @video_game.save
       render json: @video_game, status: :created, location: @video_game
@@ -25,8 +26,9 @@ class VideoGamesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /video_games/1
+  # might need to look into this once this function gets build
   def update
+    binding.pry
     if @video_game.update(video_game_params)
       render json: @video_game
     else
@@ -34,8 +36,8 @@ class VideoGamesController < ApplicationController
     end
   end
 
-  # DELETE /video_games/1
   def destroy
+    
     @video_game.destroy
   end
 

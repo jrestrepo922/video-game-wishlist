@@ -1,0 +1,67 @@
+<link rel = "stylesheet" type = "text/css" href = "style.css" />
+<div class="nav">
+    <ul>
+        <li><a href="#" id="homeLink">Home</a></li>
+        <li><a  href="#" id="genresLink">Genres</a></li>           
+    </ul>
+</div>
+
+<div id="home"></div>
+<div id="genresIndex"></div>
+<div id="videoGamesIndex"></div>
+
+
+
+<script src="index.js"></script>
+<script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
+
+
+<div class="row">
+
+    <div class="column">
+      <div class="card">
+        <%=image_tag("genres/RPG/nioh2.jpg", height: '250', width: '200') %>
+        
+        <p class="title">Game Name</p>
+      
+        <hr>
+      
+        <p>New: </p>
+    
+        <hr>
+        <p>Pre-Owned: </p>
+      
+        <hr>
+        
+        <p>Stars: /5</p>
+
+      </div>
+    </div>  
+  
+   
+  
+      <div class="column">
+      <div class="card">
+        <%=image_tag("genres/RPG/nioh2.jpg", height: '250', width: '200') %>
+        
+        <p class="title">Game Name</p>
+      
+        <hr>
+      
+        <p>New: </p>
+    
+        <hr>
+        <p>Pre-Owned: </p>
+      
+        <hr>
+        
+        <p>Stars: /5</p>
+        
+        <% if current_user.admin %>
+          <%= link_to "Edit Game", root_path %>
+          <%= link_to "Delete Game", root_path %>
+        <% end %>
+      </div>
+    </div>  
+  
+  </div>
