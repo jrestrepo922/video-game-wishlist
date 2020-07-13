@@ -79,12 +79,35 @@ function displayVideoGamesFilterByGenre() {
     clearGenresIndex(); 
     clearHome(); 
     let genreId = event.target.dataset.id 
+    let genreName = event.target.innerHTML
     let videoGamesIndexAncher = document.querySelector("#videoGamesIndex")
     videoGamesIndexAncher.innerHTML = ""
     fetch(BASE_URL+`/genres/${genreId}/video_games`)
     .then(resp => resp.json())
     .then(videoGames => {
-        videoGamesIndexAncher.innerHTML = videoGamesIndexAncher.innerHTML + 
+        let games = videoGames.map(videoGame => {
+          return  `
+          <div class="videoGameColumn">
+            <div class="videoGameCard">
+              <img src="/video-game-wishlist-frontend/assets/images/${genreName}/${videoGame.image}" width="220" height="263">
+              <p class="title">${videoGame.name}</p>
+            
+              <hr>
+            
+              <p>New: ${videoGame.new} </p>
+          
+              <hr>
+              <p>Pre-Owned: ${videoGame.pre_owned} </p>
+            
+              <hr>
+              
+              <p>Stars: ${videoGame.stars}/5</p>
+      
+            </div>
+          </div>  
+            `
+        }).join("")
+        videoGamesIndexAncher.innerHTML =  games
     })
 }
 
