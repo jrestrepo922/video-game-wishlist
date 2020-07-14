@@ -107,4 +107,45 @@
   font-size: 18px;
 }
 
+/*----------- New Vidoe Game Form---------*/
+  /* Add padding to containers */
+  .videoGameFormContainer {
+    padding: 16px;
+    background-color: white;
+  }
+  
+  /* Full-width input fields */
+  input[type=text], input[type=radial] {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+  }
+  
+  input[type=text]:focus, input[type=radial]:focus {
+    background-color: #ddd;
+    outline: none;
+  }
+  
+
+  
+  /* Set a style for the submit button */
+  #submitBtn{
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+    font-size: 20px;
+  }
+  
+ #submitBtn:hover {
+    opacity: 1;
+  }
+  
 

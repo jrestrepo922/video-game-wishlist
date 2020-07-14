@@ -93,7 +93,7 @@ function displayVideoGamesFilterByGenre() {
         })
         let createDivForLinkToCreateNewGame = `
           <div id="newVideoGameLink">
-            <a href="#" data-genre-id="${genreId}">Create New Video Game</a>
+            <a href="#" data-genreId="${genreId}">Create New Video Game</a>
           <div>
           `
         videoGamesIndexAnchor.innerHTML += createDivForLinkToCreateNewGame
@@ -148,21 +148,97 @@ function attachClickToVideoGameIndex(){
 //-----------------Video Game New --------------------//
 
 function displayCreateVideoGameForm() {
-    let genreId = event.target.dataset.genre-id 
+    clearVideoGamesIndex();
+    let genreId = event.target.dataset.genreid
     let videoGameFormAnchor = document.querySelector("#videoGameForm"); 
     let formHtml = `
+        <h2>Create New Game</h2>
+        <p>Please fill in this form to create a new game</p>
+        
+        <form id="newGameForm">
+            <div class="videoGameFormContainer">
+                <label for="title">Title</label> <br>
+                <input type="text" name="title" id="title"><br>
+        
+                <label for="new">New Price</label> <br>
+                <input type="text" name="new" id="new"><br>
+        
+                <label for="preOwned">Pre Owned Price</label> <br>
+                <input type="text" name="preOwned" id="preOwned"><br>
+        
+                <label for="stars">Stars</label> <br>
+                <input type="text" name="stars" id="stars"><br>
+        
+                <label for="image">Image </label> <br>
+                <input type="text" name="image" id="image"><br>
+        
+                <label for="companyName">Company Name</label> <br>
+                <input type="text" name="companyName" id="companyName"><br>
+                
+                <label for="rated">Rated</label> <br>
+                <input type="Text" name="rated"  id="rated">
+
+                <input type="hidden" id="formGenreId" value="${genreId}">
+        
+                
+                <input type="submit" id="submitBtn">
+            </div>
+        </form>
     
     `
+    videoGameFormAnchor.innerHTML = formHtml; 
+    document.querySelector("#newGameForm").addEventListener("submit", createVideoGame)
+}
+
+function createVideoGame(){
+    event.preventDefault();
+    let newVideoGameObj = {
+        name: document.querySelector("#newGameForm #title").value,
+        new: document.querySelector("#newGameForm #new").value,
+        preOwned: document.querySelector("#newGameForm #preOwned").value,
+        stars: document.querySelector("#newGameForm #stars").value,
+        image: document.querySelector("#newGameForm #image").value,
+        company_name: document.querySelector("#newGameForm #companyName").value,
+        rated: document.querySelector("#newGameForm #rated").value,
+        genre_id: document.querySelector("#newGameForm #formGenreId").value,
+    }
+    
+    // sending the created object to the backend
+    fetch(BASE_URL+`/genres/${newVideoGameObj.genreId}/video_games`, {
+        method: "POST",
+        body: JSON.stringify(newVideoGameObj),
+        headers: {
+            'Content-Type' : 'application/json',
+            'Accept' : 'application/json'
+        }
+    })
+    .then(resp => resp.json())
+    .then(newVideoGameObject => {
+        // need to do some work here 
+    })
+
 }
 
 
 
 
+//---------------Show Video Game --------------------//
 
-
-
-
-
+function displayVideoGame(){
+    clearVideoGameCreateForm();
+    clearVideoGamesIndex(); 
+    let genreId = event.target.dataset.genreId
+    let id = event.target.dataset.id
+    let videoGameShowAnchor = doucment.querySelector("videoGameShow")
+    fetch(BASE_URL+`genres/${genreId}/video_games/${id}`)
+    .then(resp => resp.json())
+    .then(videoGame => {
+        videoGameShowAnchor.innerHTML = `
+        
+        `
+    })
+    
+}
 
 
 
@@ -190,4 +266,9 @@ function clearGenresIndex(){
 function clearVideoGamesIndex(){
     let videoGamesIndexAnchor = document.querySelector("#videoGamesIndex")
     videoGamesIndexAnchor.innerHTML = ""
+}
+
+function clearVideoGameCreateForm() {
+    let videoGameFormAnchor = document.querySelector("#videoGameForm"); 
+    videoGameFormAnchor.innerHTML = ""
 }
