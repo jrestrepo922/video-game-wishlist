@@ -9,8 +9,10 @@ window.addEventListener("load", () => {
 // --------------Home Page -----------------------//
 
 function getHomePage(){
-  clearGenresIndex()  
-  clearVideoGamesIndex()
+  clearGenresIndex(); 
+  clearVideoGamesIndex();
+  clearVideoGameShow();
+  clearVideoGameCreateForm();
   let homeAnchor = document.querySelector("#home");
   homeAnchor.innerHTML = `
   <h1>Welcome to the Video Game Wishlist App </h1> 
@@ -25,6 +27,8 @@ function getGenres(){
     // will need to add more clear functions
     clearHome();
     clearVideoGamesIndex();
+    clearVideoGameShow();
+    clearVideoGameCreateForm();
     let genresIndex = document.querySelector("#genresIndex");
     genresIndex.innerHTML = "";
     fetch(BASE_URL+"/genres")
@@ -80,6 +84,7 @@ function attachLinksToGenreIndex(){
 function displayVideoGamesFilterByGenre() {
     clearGenresIndex(); 
     clearHome(); 
+    clearVideoGameShow();
     let genreId = event.target.dataset.id 
     let genreName = event.target.innerHTML
     let videoGamesIndexAnchor = document.querySelector("#videoGamesIndex")
@@ -149,6 +154,7 @@ function attachClickToVideoGameIndex(){
 
 function displayCreateVideoGameForm() {
     clearVideoGamesIndex();
+    clearVideoGameShow();
     let genreId = event.target.dataset.genreid
     let videoGameFormAnchor = document.querySelector("#videoGameForm"); 
     let formHtml = `
@@ -190,34 +196,34 @@ function displayCreateVideoGameForm() {
     document.querySelector("#newGameForm").addEventListener("submit", createVideoGame)
 }
 
-function createVideoGame(){
-    event.preventDefault();
-    let newVideoGameObj = {
-        name: document.querySelector("#newGameForm #title").value,
-        new: document.querySelector("#newGameForm #new").value,
-        preOwned: document.querySelector("#newGameForm #preOwned").value,
-        stars: document.querySelector("#newGameForm #stars").value,
-        image: document.querySelector("#newGameForm #image").value,
-        company_name: document.querySelector("#newGameForm #companyName").value,
-        rated: document.querySelector("#newGameForm #rated").value,
-        genre_id: document.querySelector("#newGameForm #formGenreId").value,
-    }
+// function createVideoGame(){
+//     event.preventDefault();
+//     let newVideoGameObj = {
+//         name: document.querySelector("#newGameForm #title").value,
+//         new: document.querySelector("#newGameForm #new").value,
+//         preOwned: document.querySelector("#newGameForm #preOwned").value,
+//         stars: document.querySelector("#newGameForm #stars").value,
+//         image: document.querySelector("#newGameForm #image").value,
+//         company_name: document.querySelector("#newGameForm #companyName").value,
+//         rated: document.querySelector("#newGameForm #rated").value,
+//         genre_id: document.querySelector("#newGameForm #formGenreId").value,
+//     }
     
-    // sending the created object to the backend
-    fetch(BASE_URL+`/genres/${newVideoGameObj.genreId}/video_games`, {
-        method: "POST",
-        body: JSON.stringify(newVideoGameObj),
-        headers: {
-            'Content-Type' : 'application/json',
-            'Accept' : 'application/json'
-        }
-    })
-    .then(resp => resp.json())
-    .then(newVideoGameObject => {
-        // need to do some work here 
-    })
+//     // sending the created object to the backend
+//     fetch(BASE_URL+`/genres/${newVideoGameObj.genreId}/video_games`, {
+//         method: "POST",
+//         body: JSON.stringify(newVideoGameObj),
+//         headers: {
+//             'Content-Type' : 'application/json',
+//             'Accept' : 'application/json'
+//         }
+//     })
+//     .then(resp => resp.json())
+//     .then(newVideoGameObject => {
+//         // need to do some work here 
+//     })
 
-}
+// }
 
 
 
@@ -225,16 +231,55 @@ function createVideoGame(){
 //---------------Show Video Game --------------------//
 
 function displayVideoGame(){
+    let genreId = event.target.parentElement.dataset.genreid
+    let id = event.target.parentElement.dataset.id
     clearVideoGameCreateForm();
     clearVideoGamesIndex(); 
-    let genreId = event.target.dataset.genreId
-    let id = event.target.dataset.id
-    let videoGameShowAnchor = doucment.querySelector("videoGameShow")
-    fetch(BASE_URL+`genres/${genreId}/video_games/${id}`)
+    let videoGameShowAnchor = document.querySelector("#videoGameShow")
+    fetch(BASE_URL+`/genres/${genreId}/video_games/${id}`)
     .then(resp => resp.json())
     .then(videoGame => {
+        let nameOfGenre;
+        switch(videoGame.genre_id) {
+            case 1:
+                nameOfGenre = "Action";
+                break;
+            case 2:
+                nameOfGenre = "Adventure";
+                break;
+            case 3:
+                nameOfGenre = "RPG";
+                break;
+            case 4:
+                nameOfGenre = "Shooter";
+                break;
+            case 5:
+                nameOfGenre = "Sports";
+                break;
+            case 6:
+                nameOfGenre = "Stragedy";
+                break;
+            
+        }
+
         videoGameShowAnchor.innerHTML = `
-        
+        <div class="videoGameShowColumn">
+            <div class="videoGameShowCard">
+                <img src="/Users/tinto/dev/flatiron/Projects/video-game-wishlist/video-game-wishlist-frontend/assets/images/${nameOfGenre}/${videoGame.image}" width="220" height="263"></a>
+                <p id="videoGameName"><b>${videoGame.name}</b> </p> <p>Rated: ${videoGame.rated}</p>
+                <hr>
+                <p id="videoCompanyName">Company name: &nbsp;  <b>${videoGame.company_name}</b> </p>
+                <hr>      
+                <p id="videoGameNew">New: &nbsp;  <b>${videoGame.new}</b> </p>
+                <hr>
+                <p id="videoGamePreOwned" >Pre-Owned: &nbsp; <b>${videoGame.pre_owned}</b> </p>
+                <hr>
+                <p id="videoGameName">Stars: &nbsp;<b>${videoGame.stars}/5</b></p>
+            
+                <a href="#" data-genreId="${videoGame.genre_id}" data-id="${videoGame.id}" id="edit">Edit</a>
+                <a href="#" data-genreId="${videoGame.genre_id}" data-id="${videoGame.id}" id="delete">Delete</a>
+            </div>
+        </div>  
         `
     })
     
@@ -271,4 +316,9 @@ function clearVideoGamesIndex(){
 function clearVideoGameCreateForm() {
     let videoGameFormAnchor = document.querySelector("#videoGameForm"); 
     videoGameFormAnchor.innerHTML = ""
+}
+
+function clearVideoGameShow(){
+    let videoGameShowAnchor = document.querySelector("#videoGameShow")
+    videoGameShowAnchor.innerHTML = ""
 }
