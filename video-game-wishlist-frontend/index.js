@@ -294,8 +294,8 @@ class ShowVideoGame {
 
 
 function attachClicktoVideoGameShow(){
-    // let editLink = document.querySelector(".videoGameShowCard #edit");
-    // editLink.addEventListener("click", editVideoGame)
+    let editLink = document.querySelector(".videoGameShowCard #edit");
+    editLink.addEventListener("click", editVideoGame)
     let deleteLink = document.querySelector(".videoGameShowCard #delete");
     deleteLink.addEventListener("click", deleteVideoGame)
 }
@@ -344,8 +344,58 @@ function deleteVideoGame() {
 
 //-----------------Edit Video Game--------------------// 
 
+function editVideoGame(){
+    event.preventDefault();
+    let genreId = event.target.dataset.genreid;
+    let id = event.target.dataset.id 
+    clearVideoGameShow();
+    fetch(BASE_URL+`/genres/${genreId}/video_games/${id}`)
+    .then(resp => resp.json())
+    .then(videoGame => {
+        let videoGameEditAnchor = document.querySelector("#videoGameEditForm")
+        let editFormHtml = `
+        <h2>Edit Video Game</h2>
+        <p>Please fill in this form to update the video game</p>
+        
+        <form id="EditGameForm">
+            <div class="videoEditGameFormContainer">
+                <label for="title">Title</label> <br>
+                <input type="text" name="title" id="title" value='${videoGame.name}'><br>
+        
+                <label for="new">New Price</label> <br>
+                <input type="text" name="new" id="new" value='${videoGame.new}'><br>
+        
+                <label for="preOwned">Pre Owned Price</label> <br>
+                <input type="text" name="preOwned" id="preOwned" value='${videoGame.pre_owned}'><br>
+        
+                <label for="stars">Stars</label> <br>
+                <input type="text" name="stars" id="stars" value='${videoGame.stars}'><br>
+        
+                <label for="image">Image </label> <br>
+                <input type="text" name="image" id="image" value='${videoGame.image}'><br>
+        
+                <label for="companyName">Company Name</label> <br>
+                <input type="text" name="companyName" id="companyName" value='${videoGame.company_name}'><br>
+                
+                <label for="rated">Rated</label> <br>
+                <input type="Text" name="rated"  id="rated" value='${videoGame.rated}'>
+        
+                <input type="hidden" id="formGenreId" value="${genreId}">
+        
+                
+                <input type="submit" id="submitBtn">
+            </div>
+        </form>
+        `
+        videoGameEditAnchor.innerHTML = editFormHtml;
+        document.querySelector("#EditGameForm #submitBtn").addEventListener("click", updateVideoGame)
+    })
+}
 
 
+function updateVideoGame() {
+    return 'Something'
+}
 
 
 //-----------------Navigation--------------------// 
@@ -384,6 +434,10 @@ function clearVideoGameShow(){
     videoGameShowAnchor.innerHTML = ""
 }
 
+function clearVideoGameEditFrom() {
+    let videoGameEditAnchor = document.querySelector("#videoGameEditForm")
+    videoGameEditAnchor.innerHTML = "" 
+}
 
 //------------Misc functions ------------------------------//
 function correctGenre(genreId){
