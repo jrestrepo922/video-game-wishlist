@@ -196,34 +196,37 @@ function displayCreateVideoGameForm() {
     document.querySelector("#newGameForm").addEventListener("submit", createVideoGame)
 }
 
-// function createVideoGame(){
-//     event.preventDefault();
-//     let newVideoGameObj = {
-//         name: document.querySelector("#newGameForm #title").value,
-//         new: document.querySelector("#newGameForm #new").value,
-//         preOwned: document.querySelector("#newGameForm #preOwned").value,
-//         stars: document.querySelector("#newGameForm #stars").value,
-//         image: document.querySelector("#newGameForm #image").value,
-//         company_name: document.querySelector("#newGameForm #companyName").value,
-//         rated: document.querySelector("#newGameForm #rated").value,
-//         genre_id: document.querySelector("#newGameForm #formGenreId").value,
-//     }
+function createVideoGame(){
+    event.preventDefault();
+    let newVideoGameObj = {
+        name: document.querySelector("#newGameForm #title").value,
+        new: document.querySelector("#newGameForm #new").value,
+        pre_owned: document.querySelector("#newGameForm #preOwned").value,
+        stars: document.querySelector("#newGameForm #stars").value,
+        image: document.querySelector("#newGameForm #image").value,
+        company_name: document.querySelector("#newGameForm #companyName").value,
+        rated: document.querySelector("#newGameForm #rated").value,
+        genre_id: document.querySelector("#newGameForm #formGenreId").value,
+    }
     
-//     // sending the created object to the backend
-//     fetch(BASE_URL+`/genres/${newVideoGameObj.genreId}/video_games`, {
-//         method: "POST",
-//         body: JSON.stringify(newVideoGameObj),
-//         headers: {
-//             'Content-Type' : 'application/json',
-//             'Accept' : 'application/json'
-//         }
-//     })
-//     .then(resp => resp.json())
-//     .then(newVideoGameObject => {
-//         // need to do some work here 
-//     })
+    // sending the created object to the backend
+    fetch(BASE_URL+`/genres/${newVideoGameObj.genre_id}/video_games`, {
+        method: "POST",
+        body: JSON.stringify(newVideoGameObj),
+        headers: {
+            'Content-Type' : 'application/json',
+            'Accept' : 'application/json'
+        }
+    })
+    .then(resp => resp.json())
+    .then(newVideoGameObject => {
+        let videoGameShowAnchor = document.querySelector("#videoGameShow")
+        clearVideoGameCreateForm();
+        let showNewVideoGame = new ShowVideoGame(newVideoGameObject);
+        videoGameShowAnchor.innerHTML = showNewVideoGame.renderShowVideoGame();
+    })
 
-// }
+}
 
 
 
@@ -235,55 +238,113 @@ function displayVideoGame(){
     let id = event.target.parentElement.dataset.id
     clearVideoGameCreateForm();
     clearVideoGamesIndex(); 
+    clearHome();
+    clearGenresIndex();
     let videoGameShowAnchor = document.querySelector("#videoGameShow")
     fetch(BASE_URL+`/genres/${genreId}/video_games/${id}`)
     .then(resp => resp.json())
     .then(videoGame => {
-        let nameOfGenre;
-        switch(videoGame.genre_id) {
-            case 1:
-                nameOfGenre = "Action";
-                break;
-            case 2:
-                nameOfGenre = "Adventure";
-                break;
-            case 3:
-                nameOfGenre = "RPG";
-                break;
-            case 4:
-                nameOfGenre = "Shooter";
-                break;
-            case 5:
-                nameOfGenre = "Sports";
-                break;
-            case 6:
-                nameOfGenre = "Stragedy";
-                break;
-            
-        }
-
-        videoGameShowAnchor.innerHTML = `
-        <div class="videoGameShowColumn">
-            <div class="videoGameShowCard">
-                <img src="/Users/tinto/dev/flatiron/Projects/video-game-wishlist/video-game-wishlist-frontend/assets/images/${nameOfGenre}/${videoGame.image}" width="220" height="263"></a>
-                <p id="videoGameName"><b>${videoGame.name}</b> </p> <p>Rated: ${videoGame.rated}</p>
-                <hr>
-                <p id="videoCompanyName">Company name: &nbsp;  <b>${videoGame.company_name}</b> </p>
-                <hr>      
-                <p id="videoGameNew">New: &nbsp;  <b>${videoGame.new}</b> </p>
-                <hr>
-                <p id="videoGamePreOwned" >Pre-Owned: &nbsp; <b>${videoGame.pre_owned}</b> </p>
-                <hr>
-                <p id="videoGameName">Stars: &nbsp;<b>${videoGame.stars}/5</b></p>
-            
-                <a href="#" data-genreId="${videoGame.genre_id}" data-id="${videoGame.id}" id="edit">Edit</a>
-                <a href="#" data-genreId="${videoGame.genre_id}" data-id="${videoGame.id}" id="delete">Delete</a>
-            </div>
-        </div>  
-        `
+        let showVideoGame = new ShowVideoGame(videoGame);
+        videoGameShowAnchor.innerHTML = showVideoGame.renderShowVideoGame(); 
+        attachClicktoVideoGameShow();
     })
     
 }
+
+class ShowVideoGame {
+    constructor(videoGame){
+        this.id = videoGame.id;
+        this.name = videoGame.name;
+        this.new = videoGame.new;
+        this.pre_owned = videoGame.pre_owned;
+        this.stars = videoGame.stars;
+        this.image = videoGame.image;
+        this.company_name = videoGame.company_name;
+        this.rated = videoGame.rated;
+        this.genre_id = videoGame.genre_id;
+    }
+
+
+    renderShowVideoGame(){
+        let nameOfGenre = correctGenre(this.genre_id)
+
+        let showVideoGameHtml = `
+        <div class="videoGameShowColumn">
+            <div class="videoGameShowCard">
+                <img src="/Users/tinto/dev/flatiron/Projects/video-game-wishlist/video-game-wishlist-frontend/assets/images/${nameOfGenre}/${this.image}" width="220" height="263"></a>
+                <p id="videoGameName"><b>${this.name}</b> </p> <p>Rated: ${this.rated}</p>
+                <hr>
+                <p id="videoCompanyName">Company name: &nbsp;  <b>${this.company_name}</b> </p>
+                <hr>      
+                <p id="videoGameNew">New: &nbsp;  <b>${this.new}</b> </p>
+                <hr>
+                <p id="videoGamePreOwned" >Pre-Owned: &nbsp; <b>${this.pre_owned}</b> </p>
+                <hr>
+                <p id="videoGameName">Stars: &nbsp;<b>${this.stars}/5</b></p>
+            
+                <a href="#" data-genreId="${this.genre_id}" data-id="${this.id}" id="edit">Edit</a> &nbsp; &nbsp;
+                <a href="#" data-genreId="${this.genre_id}" data-id="${this.id}" id="delete">Delete</a>
+            </div>
+        </div>  
+        `
+
+        return showVideoGameHtml;
+    }
+}
+
+
+function attachClicktoVideoGameShow(){
+    // let editLink = document.querySelector(".videoGameShowCard #edit");
+    // editLink.addEventListener("click", editVideoGame)
+    let deleteLink = document.querySelector(".videoGameShowCard #delete");
+    deleteLink.addEventListener("click", deleteVideoGame)
+}
+
+
+
+
+//-----------------Delete Video Game--------------------// 
+
+function deleteVideoGame() {
+    event.preventDefault();
+    let genreId = event.target.dataset.genreid;
+    let id = event.target.dataset.id 
+    fetch(BASE_URL+`/genres/${genreId}/video_games/${id}`, {
+        method: "DELETE",
+        headers: {
+            'Content-Type' : 'application/json',
+            'Accept' : 'application/json'
+        }
+    }).then( () =>
+    {
+    let genreName = correctGenre(parseInt(genreId));
+    let videoGamesIndexAnchor = document.querySelector("#videoGamesIndex")
+    videoGamesIndexAnchor.innerHTML = ""
+    fetch(BASE_URL+`/genres/${genreId}/video_games`)
+    .then(resp => resp.json())
+    .then(videoGames => {
+        videoGames.forEach(videoGame => {
+            let newVideoGame = new VideoGame(videoGame)
+            videoGamesIndexAnchor.innerHTML += newVideoGame.renderVideoGame(genreName)
+        })
+        let createDivForLinkToCreateNewGame = `
+          <div id="newVideoGameLink">
+            <a href="#" data-genreId="${genreId}">Create New Video Game</a>
+          <div>
+          `
+        videoGamesIndexAnchor.innerHTML += createDivForLinkToCreateNewGame
+
+        attachClickToVideoGameIndex();
+        clearVideoGameShow();
+    })
+  })
+
+}
+
+
+//-----------------Edit Video Game--------------------// 
+
+
 
 
 
@@ -321,4 +382,32 @@ function clearVideoGameCreateForm() {
 function clearVideoGameShow(){
     let videoGameShowAnchor = document.querySelector("#videoGameShow")
     videoGameShowAnchor.innerHTML = ""
+}
+
+
+//------------Misc functions ------------------------------//
+function correctGenre(genreId){
+    let nameOfGenre;
+    switch(genreId) {
+        case 1:
+            nameOfGenre = "Action";
+            break;
+        case 2:
+            nameOfGenre = "Adventure";
+            break;
+        case 3:
+            nameOfGenre = "RPG";
+            break;
+        case 4:
+            nameOfGenre = "Shooter";
+            break;
+        case 5:
+            nameOfGenre = "Sports";
+            break;
+        case 6:
+            nameOfGenre = "Stragedy";
+            break; 
+    } 
+
+    return nameOfGenre
 }

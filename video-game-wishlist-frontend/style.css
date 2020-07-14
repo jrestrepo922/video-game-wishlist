@@ -79,7 +79,7 @@
 
 /* Responsive columns */
 @media screen and (max-width: 600px) {
-  .column {
+  .videoGameColumn {
     width: 100%;
     display: block;
     margin-bottom: 20px;
@@ -107,7 +107,7 @@
   font-size: 18px;
 }
 
-/*----------- New Vidoe Game Form---------*/
+/*----------- New Video Game Form---------*/
   /* Add padding to containers */
   .videoGameFormContainer {
     padding: 16px;
@@ -149,3 +149,47 @@
   }
   
 
+/*----------- Show Video Game ---------*/
+
+/* Float four columns side by side */
+.videoGameShowColumn {
+  float: left;
+  width: 100%;
+  padding: 10px 10px;
+}
+
+/* Remove extra left and right margins, due to padding */
+#videoGameShow {
+  margin: 0 -5px;
+}
+
+/* Clear floats after the columns */
+#videoGameShow:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive columns */
+@media screen and (max-width: 600px) {
+  .videoGameShowColumn {
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+  }
+}
+
+/* Style the counter cards */
+.videoGameShowCard {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  text-align: center;
+  background-color: #f1f1f1;
+}
+
+
+
+.videoGameShowColumn a{
+  text-decoration: none;
+  font-size: 18px;
+}
