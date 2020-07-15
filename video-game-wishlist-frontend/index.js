@@ -16,8 +16,12 @@ function getHomePage(){
   clearVideoGameEditForm();
   let homeAnchor = document.querySelector("#home");
   homeAnchor.innerHTML = `
-  <h1>Welcome to the Video Game Wishlist App </h1> 
-  <h3> Select Genre buttom to get the App started </h3> 
+  <div class="hero-image">
+    <div class="hero-text">
+        <h1>Welcome to the Video Game Wishlist App </h1> 
+        <h3> Select Genre buttom to get the App started </h3> 
+    </div>
+  </div>
   `  
 }
 
@@ -137,7 +141,7 @@ class VideoGame {
         return `
         <div class="videoGameColumn">
         <div class="videoGameCard">
-        <a href="#" data-genreId="${this.genre_id}" data-id="${this.id}"><img src="/Users/tinto/dev/flatiron/Projects/video-game-wishlist/video-game-wishlist-frontend/assets/images/${nameOfGenre}/${this.image}" width="220" height="263"></a>
+        <a href="#" data-genreId="${this.genre_id}" data-id="${this.id}"><img src="/Users/tinto/dev/flatiron/Projects/video-game-wishlist/video-game-wishlist-frontend/assets/images/${nameOfGenre}/${this.image}" width="220" height="263" alt="Image not Avaliable"></a>
           <p id="videoGameName"><b>${this.name}</b></p>
           <hr>
           <p id="videoGameNew">New: &nbsp;  <b>$${this.new}</b> </p>
@@ -284,7 +288,7 @@ class ShowVideoGame {
         let showVideoGameHtml = `
         <div class="videoGameShowColumn">
             <div class="videoGameShowCard">
-                <img src="/Users/tinto/dev/flatiron/Projects/video-game-wishlist/video-game-wishlist-frontend/assets/images/${nameOfGenre}/${this.image}" width="220" height="263"></a>
+                <img src="/Users/tinto/dev/flatiron/Projects/video-game-wishlist/video-game-wishlist-frontend/assets/images/${nameOfGenre}/${this.image}" width="220" height="263" alt="Image not Avaliable"></a>
                 <p id="videoGameName"><b>${this.name}</b> </p> <p>Rated: ${this.rated}</p>
                 <hr>
                 <p id="videoCompanyName">Company name: &nbsp;  <b>${this.company_name}</b> </p>
