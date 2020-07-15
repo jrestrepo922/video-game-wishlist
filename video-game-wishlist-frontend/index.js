@@ -13,6 +13,7 @@ function getHomePage(){
   clearVideoGamesIndex();
   clearVideoGameShow();
   clearVideoGameCreateForm();
+  clearVideoGameEditForm();
   let homeAnchor = document.querySelector("#home");
   homeAnchor.innerHTML = `
   <h1>Welcome to the Video Game Wishlist App </h1> 
@@ -29,6 +30,7 @@ function getGenres(){
     clearVideoGamesIndex();
     clearVideoGameShow();
     clearVideoGameCreateForm();
+    clearVideoGameEditForm();
     let genresIndex = document.querySelector("#genresIndex");
     genresIndex.innerHTML = "";
     fetch(BASE_URL+"/genres")
@@ -85,6 +87,8 @@ function displayVideoGamesFilterByGenre() {
     clearGenresIndex(); 
     clearHome(); 
     clearVideoGameShow();
+    clearVideoGameEditForm();
+    clearVideoGameCreateForm();
     let genreId = event.target.dataset.id 
     let genreName = event.target.innerHTML
     let videoGamesIndexAnchor = document.querySelector("#videoGamesIndex")
@@ -92,10 +96,17 @@ function displayVideoGamesFilterByGenre() {
     fetch(BASE_URL+`/genres/${genreId}/video_games`)
     .then(resp => resp.json())
     .then(videoGames => {
-        videoGames.forEach(videoGame => {
-            let newVideoGame = new VideoGame(videoGame)
-            videoGamesIndexAnchor.innerHTML += newVideoGame.renderVideoGame(genreName)
-        })
+        if (videoGames.length === 0){
+            videoGamesIndexAnchor.innerHTML = `
+                <h2> There is not video Games for this genre right now. click on add new  video game at the bottom right of the screen to add some. </h2>
+            `
+        } else {
+            videoGames.forEach(videoGame => {
+                let newVideoGame = new VideoGame(videoGame)
+                videoGamesIndexAnchor.innerHTML += newVideoGame.renderVideoGame(genreName)
+            })
+        }
+
         let createDivForLinkToCreateNewGame = `
           <div id="newVideoGameLink">
             <a href="#" data-genreId="${genreId}">Create New Video Game</a>
@@ -129,9 +140,9 @@ class VideoGame {
         <a href="#" data-genreId="${this.genre_id}" data-id="${this.id}"><img src="/Users/tinto/dev/flatiron/Projects/video-game-wishlist/video-game-wishlist-frontend/assets/images/${nameOfGenre}/${this.image}" width="220" height="263"></a>
           <p id="videoGameName"><b>${this.name}</b></p>
           <hr>
-          <p id="videoGameNew">New: &nbsp;  <b>${this.new}</b> </p>
+          <p id="videoGameNew">New: &nbsp;  <b>$${this.new}</b> </p>
           <hr>
-          <p id="videoGamePreOwned" >Pre-Owned: &nbsp; <b>${this.pre_owned}</b> </p>
+          <p id="videoGamePreOwned" >Pre-Owned: &nbsp; <b>$${this.pre_owned}</b> </p>
           <hr>
           <p id="videoGameName">Stars: &nbsp;<b>${this.stars}/5</b></p>
         </div>
@@ -155,6 +166,7 @@ function attachClickToVideoGameIndex(){
 function displayCreateVideoGameForm() {
     clearVideoGamesIndex();
     clearVideoGameShow();
+    clearVideoGameEditForm();
     let genreId = event.target.dataset.genreid
     let videoGameFormAnchor = document.querySelector("#videoGameForm"); 
     let formHtml = `
@@ -240,6 +252,7 @@ function displayVideoGame(){
     clearVideoGamesIndex(); 
     clearHome();
     clearGenresIndex();
+    clearVideoGameEditForm()
     let videoGameShowAnchor = document.querySelector("#videoGameShow")
     fetch(BASE_URL+`/genres/${genreId}/video_games/${id}`)
     .then(resp => resp.json())
@@ -276,9 +289,9 @@ class ShowVideoGame {
                 <hr>
                 <p id="videoCompanyName">Company name: &nbsp;  <b>${this.company_name}</b> </p>
                 <hr>      
-                <p id="videoGameNew">New: &nbsp;  <b>${this.new}</b> </p>
+                <p id="videoGameNew">New: &nbsp;  <b>$${this.new}</b> </p>
                 <hr>
-                <p id="videoGamePreOwned" >Pre-Owned: &nbsp; <b>${this.pre_owned}</b> </p>
+                <p id="videoGamePreOwned" >Pre-Owned: &nbsp; <b>$${this.pre_owned}</b> </p>
                 <hr>
                 <p id="videoGameName">Stars: &nbsp;<b>${this.stars}/5</b></p>
             
@@ -381,6 +394,7 @@ function editVideoGame(){
                 <input type="Text" name="rated"  id="rated" value='${videoGame.rated}'>
         
                 <input type="hidden" id="formGenreId" value="${genreId}">
+                <input type="hidden" id="formId" value="${id}">
         
                 
                 <input type="submit" id="submitBtn">
@@ -394,7 +408,36 @@ function editVideoGame(){
 
 
 function updateVideoGame() {
-    return 'Something'
+    event.preventDefault();
+    let updatedVideoGameObj = {
+        name: document.querySelector("#editGameForm #title").value,
+        new: document.querySelector("#editGameForm #new").value,
+        pre_owned: document.querySelector("#editGameForm #preOwned").value,
+        stars: document.querySelector("#editGameForm #stars").value,
+        image: document.querySelector("#editGameForm #image").value,
+        company_name: document.querySelector("#editGameForm #companyName").value,
+        rated: document.querySelector("#editGameForm #rated").value,
+        genre_id: document.querySelector("#editGameForm #formGenreId").value,
+        id: document.querySelector("#editGameForm #formId").value,
+    }
+    
+    fetch(BASE_URL+`/genres/${updatedVideoGameObj.genre_id}/video_games/${updatedVideoGameObj.id}`, {
+        method: "PATCH",
+        headers: {
+            'Content-Type' : 'application/json',
+            'Accept' : 'application/json'
+        },
+        body: JSON.stringify(updatedVideoGameObj)
+    }) // this sends it to the update action for the contoller and then it reponds back with JSON
+    .then(resp => resp.json() )
+    .then(updatedVideoGameObject => {
+        let showUpdatedVideoGame = new ShowVideoGame(updatedVideoGameObject);
+        let videoGameShowAnchor = document.querySelector("#videoGameShow");
+        videoGameShowAnchor.innerHTML = showUpdatedVideoGame.renderShowVideoGame(); 
+        attachClicktoVideoGameShow();
+        clearVideoGameEditForm();
+    })
+    
 }
 
 
@@ -434,7 +477,7 @@ function clearVideoGameShow(){
     videoGameShowAnchor.innerHTML = ""
 }
 
-function clearVideoGameEditFrom() {
+function clearVideoGameEditForm() {
     let videoGameEditAnchor = document.querySelector("#videoGameEditForm")
     videoGameEditAnchor.innerHTML = "" 
 }

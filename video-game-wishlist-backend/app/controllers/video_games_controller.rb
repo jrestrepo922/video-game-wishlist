@@ -28,7 +28,7 @@ class VideoGamesController < ApplicationController
 
   # might need to look into this once this function gets build
   def update
-    binding.pry
+    
     @video_game = @genre.video_games.find(params[:id])
     if @video_game.update(video_game_params)
       render json: @video_game
